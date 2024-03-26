@@ -1,66 +1,209 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Upute za izradu laravel aplikacije (lokalno)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+#### 1. Pokrenuti laragon
+#### 2. Kreirati laravel aplikaciju
+Desnim klikom na laragon sučelje odabrati kreiranje nove Laravel aplikacije
 
-## About Laravel
+ili
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Koristeći composer putem terminala  
+`composer create-project --prefer-dist laravel/laravel ui_projekt`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+#### 3. Kreirati bazu podataka
+Koristeći laragon heidi alat, kreirati novu bazu podataka.  
+Ukoliko ste projekt izradili preko laragon sučelja, baza se automatski kreira.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+#### 4. Postaviti okruženje (.env)
+Unutar .env datoteke postaviti okruženje i podatke za pristup bazi podataka
 
-## Learning Laravel
+DB_DATABASE=ui2024 // Ime vase baze  
+DB_USERNAME=root  
+DB_PASSWORD=
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+#### NPM
+npm install  
+npm run dev // Dev za debug nacin rada  
+ili  
+npm run watch // automatski osvjezava promjene css/js
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Aplikacija je lokalno dostupna na ui2024.test**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+#### Kreiranje baze podataka
+    php artisan migrate
 
-## Laravel Sponsors
+DROP cijele baze i ponovno pokretanje migracija! Oprez!
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+    php artisan migrate:fresh
 
-### Premium Partners
+#### Kreiranje modela
+    php artisan make:model Car -mcr --api
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+#### Uređivanje migracije
+File database/migrations/timestamp_create_model_table.php
 
-## Contributing
+Ponovno pokrenuti migraciju kako bi se odrazile promjene
+php artisan migrate
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Dodavanje polja u bazi u fillable
+Kako bi se polja mogla upisivati kroz Eloquent ORM metode, potrebno je omoguciti da polja u bazi budu tzv. mass assignable.
 
-## Code of Conduct
+To postižemo override-om $fillable svojstva unutar našeg modela npr.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+app/models/Car.php
 
-## Security Vulnerabilities
+        protected $fillable = ['manufacturer', 'year', 'model_name', 'color'];
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### PHP Laravel tinker
+Ulaskom u tinker otvara se php shell sa laravel okruzenjem.
+Služi za testiranje pojedinih naredbenih linija koda.
+
+    php artisan tinker
+
+#### CRUD modela u tinker-u
+
+CREATE
+
+     Car::create(['manufacturer'=>'Audi', 'model_name'=>'A6', 'year'=>2020])
+
+READ
+
+Svi modeli (array)
+
+    Car::all()
+
+Jedan model po ID (objekt)
+
+    Car::find(1)
+
+UPDATE
+
+    $car = Car::find(1);
+    $car->model_name = 'A4';
+    $car->save();
+
+DELETE
+
+    $car = Car::find(1);
+    $car->delete();
+
+## Upute za postavljanje projekta na studentski server
+
+
+#### 1. Prijava na studentski poslužitelj
+
+    Host: studenti.sum.ba
+
+    Korisničko ime: uiXXYYYY
+
+    Lozinka: csdigitalYYYY
+
+**XX** broj grupe (01, 02, 03...)
+
+**YYYY** akademska godina
+
+<br>
+
+#### 2. Unutar Vašeg foldera klonirati repozitorij s githuba
+    git clone https://github.com/RobertRozic/ui2024.git
+
+
+#### 3. Napraviti simbolički link sa **public** direktorij-a u laravel projektu na **backend** folder na posluzitelj
+
+    ln -s /home/uiXXYYYY/ime-projekta/public/ /home/uiXXYYYY/public
+
+#### 4. Pozicionirati se u folder projekta
+    cd ~/ime-projekta
+
+#### 5. Instalirati composer dependency-je
+    composer install
+
+#### 6. Podesiti .env na poslužitelju
+Primjer kopiramo u .env file
+
+    cp .env.example .env
+
+Podesimo bazu
+
+    DB_DATABASE=uiXXYYYY
+    DB_USERNAME=uiiXXYYYY
+    DB_PASSWORD=csdigitalYYYY
+
+Generiramo key aplikacije
+
+    php artisan key:generate
+
+#### 7. Podesiti permisije
+    chgrp -R www-data storage bootstrap/cache
+    chmod -R ug+rwx storage bootstrap/cache
+
+### Backend aplikacije je dostupan na linku
+    http://uiXXYYY.studenti.sum.ba
+
+
+### Baza podataka
+Na studentskom poslužitelju svaka grupa ima MySql bazu.
+
+Pristupni podaci su (.env laravel konfiguracija):  
+DB_HOST=localhost (localhost na samom poslužitelju)  
+DB_DATABASE=uiXXYYYY    
+DB_USERNAME=uiXXYYYY  
+DB_PASSWORD=csdigitalYYYY
+
+Bazi podataka možete pristupiti putem phpmyadmin-a instaliranog na poslužitelju.  
+Putem PhpMyAdmina možete raditi import podataka koje imate na lokalnoj bazi.
+
+[PHPMyAdmin](https://studenti.sum.ba/phpmyadmin)
+
+### Ažuriranje projekta
+Nakon pristupa folderu u kojem se nalazi vaš projekt, koristite naredbu
+####
+    git pull
+Ova naredba povlači sve promjene koje ste postavili na javni github repozitorij
+
+
+### [Video lekcija](https://www.youtube.com/watch?v=R4_Pqt3lhPk)
+
+Ukoliko imate problema s postavljanjem, javite se na email `robert.rozic@fpmoz.sum.ba`
+
+
+## Osnovne naredbe u linuxu
+* **pwd** - Ispis putanje trenutnog foldera u kojemu se nalazimo (**p**rint **w**ork **d**irectory)
+
+`pwd`  
+`/home/ui002024`
+
+* **cd** - Promjena direktorija (**c**hange **d**irectory)
+
+`cd public`
+
+Vraćanje u prethodni direktorij
+
+`cd ..`
+
+* **mkdir** - Kreiranje direktorija (**m**ake **d**irectory)
+
+`mkdir test`
+
+* **touch** - Kreiranje datoteke
+
+`touch test.txt`
+
+* **nano** - Ugrađeni tekstualni editor
+
+`nano test.txt`
+
+Za izlazak iz editora koristi se CTRL+X, zatim editor pita za spremanje datoteke.
+
+Pritisnite y (za da) ili n (za ne).
+
+* **ln -s** - Kreiranje simboličkog linka
+
+`ln -s izvor odrediste`
+
+Brisanje datoteke/direktorija
+
+`rm -rf public`
+
+
